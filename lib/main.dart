@@ -5,11 +5,13 @@ import 'tickets.dart';
 import 'parking.dart';
 import 'myprofile.dart';
 import 'package:flutter/services.dart';
+
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Color.fromARGB(255, 255, 251, 255),
     statusBarIconBrightness: Brightness.dark,
-    statusBarBrightness: Brightness.light 
+    statusBarBrightness: Brightness.light,
+    systemNavigationBarColor: Color.fromARGB(255, 249, 233, 238),
+    statusBarColor: Colors.transparent,
   ));
   runApp(const MyApp());
 }
@@ -43,15 +45,20 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: Color.fromARGB(255, 249, 233, 238), // navigation bar color
+        systemNavigationBarIconBrightness: Brightness.dark, //navigation bar icons' color
+      ),
+      child: Scaffold(
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
           setState(() {
             currentPageIndex = index;
           });
         },
-        indicatorColor: Color.fromARGB(255, 238, 142, 135),
+        indicatorColor: const Color.fromARGB(255, 238, 142, 135),
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
@@ -91,6 +98,7 @@ class _BarraNavegacionState extends State<BarraNavegacion> {
 
       ][currentPageIndex],
       )
+    )
     );
   }
 }

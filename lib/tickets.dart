@@ -1,6 +1,8 @@
-import 'package:ccsxxi/searchbar.dart';
+import 'package:ccsxxi/listview.dart';
+import 'package:ccsxxi/models/cartelera.dart';
+import 'searchbar.dart';
 import 'package:flutter/material.dart';
-import 'namer_app_icons.dart';
+//import 'namer_app_icons.dart';
 
 class Tickets extends StatefulWidget{
   const Tickets({super.key});
@@ -13,33 +15,62 @@ class TicketsState extends State<Tickets>{
   
   @override
   Widget build(BuildContext context){
-    return const Card(
-      child: Column(
+    return const Column(
         children:[
-          TopSearchBar(),
-          Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-               Card(
-                child:  ListTile(
-                  leading: Icon(Namer_app.ticket_alt),
-                  title: Text('Boleto 1'),
-                  subtitle: Text('Esto es un boleto'),
-                ),
-              ),
-               Card(
-                child:  ListTile(
-                  leading: Icon(Namer_app.ticket_alt),
-                  title: Text('Boleto 2'),
-                  subtitle: Text('Esto es un boleto X2'),
-                ),
-              ),
-            ],
-          ),
-        )
-        ]
-        ),   
+         TopSearchBar(),
+          Expanded(
+              child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(child:TicketTitle(),),
+                SliverToBoxAdapter(child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Column(
+                    children:  <Widget>[
+                      ListTicket(cartelera: Cartelera('Aquaman and the Lost Kingdom','Sala de Cine CCSXXI','01/01/2020','20:00 - 21:00','assets/images/poster.png','assets/images/banner.png')),
+                      ListTicket(cartelera:  Cartelera('Aquaman and the Lost Kingdom','Sala de Cine CCSXXI','01/01/2020','20:00 - 21:00','assets/images/poster.png','assets/images/banner.png')),
+                      ListTicket(cartelera:  Cartelera('Aquaman and the Lost Kingdom','Sala de Cine CCSXXI','01/01/2020','20:00 - 21:00','assets/images/poster.png','assets/images/banner.png')),
+                    ],
+                  ),
+                )
+              )
+            ]
+          )
+        ),
+          
+      ]
     );
   }
 }
+
+class TicketTitle extends StatefulWidget{
+  const TicketTitle({super.key});
+  
+  @override
+  State<TicketTitle> createState() => TicketTitleState();
+}
+
+class TicketTitleState extends State<TicketTitle>{
+  
+  @override
+  Widget build(BuildContext context){
+    return const Row(
+        children: <Widget>[
+          Expanded(
+            child:
+            Padding(
+              padding: EdgeInsets.only(left: 15, top: 10, bottom: 10,right: 15),
+              child: 
+                Text.rich(
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
+                  TextSpan(
+                    text: "Mis Boletos",
+                )
+              )
+            )
+          )
+        ],
+      );
+  }
+
+}   
+
