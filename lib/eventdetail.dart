@@ -23,7 +23,7 @@ class EventDetailsState extends State<EventDetails>{
       child: Scaffold(
         body: CustomScrollView(
           slivers:[ 
-            SliverToBoxAdapter(child:Image.asset(widget.cartelera.banner)),
+            SliverToBoxAdapter(child:Image.asset('assets/images/index.png')),
             SliverToBoxAdapter(child:DatosGenerales(cartelera: widget.cartelera)),
             SliverToBoxAdapter(child:Sinopsis(cartelera: widget.cartelera)),
 
@@ -59,7 +59,7 @@ class DatosGeneralesState extends State<DatosGenerales>{
                   Expanded(
                     flex: 4,
                     child: SizedBox(
-                      child: Image.asset(widget.cartelera.poster, width: 200, height: 220,),
+                      child: Image.network(widget.cartelera.EVENTO.FOTO, width: 200, height: 220,),
                     )  
                   ),
                   Expanded(
@@ -67,13 +67,12 @@ class DatosGeneralesState extends State<DatosGenerales>{
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(widget.cartelera.evento, style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 24)),
+                        Text(widget.cartelera.EVENTO.NOMBRE, style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 24)),
                         const Text('Lugar:', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14)),
-                        Text(widget.cartelera.lugar, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 14)),
+                        Text(widget.cartelera.SALA.NOMBRE, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 14)),
                         const Text('Fecha:', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14)),
-                        Text(widget.cartelera.fecha, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 14)),
-                        const Text('Hora:', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14)),
-                        Text(widget.cartelera.hora, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 14)),
+                        Text(widget.cartelera.INICIO, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 14)),
+
                     ],
                                   ),
                   ),

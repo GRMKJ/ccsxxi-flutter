@@ -26,10 +26,8 @@ class TicketsState extends State<Tickets>{
                   padding: EdgeInsets.all(8.0),
                   child: Column(
                     children:  <Widget>[
-                      ListTicket(cartelera: Cartelera('Aquaman and the Lost Kingdom','Sala de Cine CCSXXI','01/01/2020','20:00 - 21:00','assets/images/poster.png','assets/images/banner.png')),
-                      ListTicket(cartelera:  Cartelera('Aquaman and the Lost Kingdom','Sala de Cine CCSXXI','01/01/2020','20:00 - 21:00','assets/images/poster.png','assets/images/banner.png')),
-                      ListTicket(cartelera:  Cartelera('Aquaman and the Lost Kingdom','Sala de Cine CCSXXI','01/01/2020','20:00 - 21:00','assets/images/poster.png','assets/images/banner.png')),
-                    ],
+                      
+                      ],
                   ),
                 )
               )

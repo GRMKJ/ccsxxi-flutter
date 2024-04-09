@@ -1,43 +1,73 @@
+// ignore_for_file: curly_braces_in_flow_control_structures
+
 import 'package:ccsxxi/eventdetail.dart';
 import 'package:ccsxxi/ticketdetail.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ccsxxi/models/cartelera.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:async';
+
+Future<ListaCartelera> fetchAlbum() async {
+  final response = await http
+      .get(Uri.parse('https://minitechsolutions.shop/ccsxxitest/api/cartelerahome.php'));
+
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    log(response.body);
+    return ListaCartelera.fromJson(jsonDecode(response.body) as List<dynamic>);
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to load album');
+  }
+}
 
 class ListViewCarteleraP extends StatefulWidget{
   const ListViewCarteleraP({super.key});
-  
 
   @override
   State<ListViewCarteleraP> createState() => ListViewCarteleraPState();
 }
 
 class ListViewCarteleraPState extends State<ListViewCarteleraP>{
+  late Future<ListaCartelera> cartelera;
+
+  @override
+  void initState() {
+    super.initState();
+    cartelera = fetchAlbum();
+  }
 
   @override
   Widget build(BuildContext context){
-      return SliverPadding(
-      padding: const EdgeInsets.only(left:10, right: 10),
-      sliver: SliverGrid.count( 
-        childAspectRatio: .475, 
-        crossAxisSpacing: 0,
-        mainAxisSpacing: 0,
-        crossAxisCount: 3,
-        children: const [
-          CarteleraPoster(cartelera: Cartelera('Aquaman and the Lost Kingdom','Sala de Cine CCSXXI','01/01/2020','20:00 - 21:00','assets/images/poster.png','assets/images/banner.png')),
-          CarteleraPoster(cartelera: Cartelera('Aquaman and the Lost Kingdom','Sala de Cine CCSXXI','01/01/2020','20:00 - 21:00','assets/images/poster.png','assets/images/banner.png')),
-          CarteleraPoster(cartelera: Cartelera('Aquaman and the Lost Kingdom','Sala de Cine CCSXXI','01/01/2020','20:00 - 21:00','assets/images/poster.png','assets/images/banner.png')),
-          CarteleraPoster(cartelera: Cartelera('Aquaman and the Lost Kingdom','Sala de Cine CCSXXI','01/01/2020','20:00 - 21:00','assets/images/poster.png','assets/images/banner.png')),
-          CarteleraPoster(cartelera: Cartelera('Aquaman and the Lost Kingdom','Sala de Cine CCSXXI','01/01/2020','20:00 - 21:00','assets/images/poster.png','assets/images/banner.png')),
-          CarteleraPoster(cartelera: Cartelera('Aquaman and the Lost Kingdom','Sala de Cine CCSXXI','01/01/2020','20:00 - 21:00','assets/images/poster.png','assets/images/banner.png'))
-        ],
-      )
+    
+      return FutureBuilder<ListaCartelera>(
+      future: fetchAlbum(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Text(snapshot.hasData.toString());
+        } 
+        else if (snapshot.hasError) {
+          return Text('${snapshot.error}');
+        }
+
+    // By default, show a loading spinner.
+      return const CircularProgressIndicator();
+      },
     );
   }
 }
 
+
 class CarteleraPoster extends StatefulWidget{
   const CarteleraPoster({super.key, required this.cartelera});
   final Cartelera cartelera;
+
+  
 
   @override
   State<CarteleraPoster> createState() => CarteleraPosterState();
@@ -61,7 +91,7 @@ class CarteleraPosterState extends State<CarteleraPoster>{
               child: SizedBox(
                 width: 200,
                 height: 350,
-                child: Image.asset(widget.cartelera.poster, width: 200, height: 350,),
+                child: Image.network(widget.cartelera.EVENTO.FOTO, width: 200, height: 350,),
               )  
             ),
             Expanded(
@@ -77,12 +107,11 @@ class CarteleraPosterState extends State<CarteleraPoster>{
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                         textAlign: TextAlign.center,
                         TextSpan(
-                          text: widget.cartelera.evento,
+                          text: widget.cartelera.EVENTO.NOMBRE,
                         ) 
                       ),
-                    Text(widget.cartelera.lugar, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 12)),
-                    Text(widget.cartelera.fecha, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 12)),
-                    Text(widget.cartelera.hora, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 12))
+                    Text(widget.cartelera.SALA.NOMBRE, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 12)),
+                    Text(widget.cartelera.INICIO, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 12)),
                   ],
                 ),
               ))
@@ -179,7 +208,7 @@ class ListTicketState extends State<ListTicket>{
 
   @override
    Widget build(BuildContext context){
-    String suma = '${widget.cartelera.lugar} - ${widget.cartelera.fecha}';
+    String suma = '${widget.cartelera.SALA.NOMBRE} - ${widget.cartelera.INICIO}';
 
     return InkWell(
       onTap: (){
@@ -193,7 +222,7 @@ class ListTicketState extends State<ListTicket>{
           children: [
             Expanded(
               flex: 2,
-              child: Image.asset(widget.cartelera.poster),  
+              child: Image.network(widget.cartelera.EVENTO.FOTO),  
             ),
             Expanded(
               flex: 8,
@@ -202,9 +231,9 @@ class ListTicketState extends State<ListTicket>{
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.cartelera.evento, style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 18)),
+                    Text(widget.cartelera.EVENTO.NOMBRE, style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 18)),
                     Text(suma, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 14)),
-                    Text(widget.cartelera.hora, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 14))
+                    Text(widget.cartelera.INICIO, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 14))
                   ],
                 ),
               )

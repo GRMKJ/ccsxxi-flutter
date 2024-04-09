@@ -22,7 +22,7 @@ class HomeState extends State<Home>{
             slivers: [
               SliverToBoxAdapter(child:Spinner()),
               SliverToBoxAdapter(child:TitleHome()),
-              ListViewCarteleraP()
+              SliverToBoxAdapter(child:ListViewCarteleraP())
             ]
           )
         )

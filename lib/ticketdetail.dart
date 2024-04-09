@@ -23,7 +23,7 @@ class TicketDetailState extends State<TicketDetail>{
       child: Scaffold(
         body: CustomScrollView(
           slivers:[ 
-            SliverToBoxAdapter(child:Image.asset(widget.cartelera.banner)),
+            SliverToBoxAdapter(child:Image.asset('assets/images/index.png')),
             SliverToBoxAdapter(child:Poster(cartelera: widget.cartelera)),
             SliverToBoxAdapter(child:DatosGenerales(cartelera: widget.cartelera)),
             SliverToBoxAdapter(child:QrCode(cartelera: widget.cartelera)),
@@ -61,7 +61,7 @@ class PosterState extends State<Poster>{
       padding: EdgeInsets.all(10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [Image.asset(widget.cartelera.poster)],
+        children: [Image.asset(widget.cartelera.EVENTO.FOTO)],
       ),
     );
   }
@@ -83,13 +83,11 @@ class DatosGeneralesState extends State<DatosGenerales>{
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(widget.cartelera.evento, style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 24)),
+          Text(widget.cartelera.EVENTO.NOMBRE, style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 24)),
           const Text('Lugar:', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14)),
-          Text(widget.cartelera.lugar, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 14)),
+          Text(widget.cartelera.SALA.NOMBRE, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 14)),
           const Text('Fecha:', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14)),
-          Text(widget.cartelera.fecha, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 14)),
-          const Text('Hora:', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14)),
-          Text(widget.cartelera.hora, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 14)),
+          Text(widget.cartelera.INICIO, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 14)),
       ],
         ),
     );
