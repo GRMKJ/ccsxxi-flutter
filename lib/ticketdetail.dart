@@ -88,6 +88,7 @@ class DatosGeneralesState extends State<DatosGenerales>{
           Text(widget.cartelera.SALA.NOMBRE, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 14)),
           const Text('Fecha:', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14)),
           Text(widget.cartelera.INICIO, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 14)),
+          const Text('Hora:', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14)),
       ],
         ),
     );

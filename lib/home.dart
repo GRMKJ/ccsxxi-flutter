@@ -1,11 +1,16 @@
+import 'package:ccsxxi/login.dart';
+
 import 'listview.dart';
 import 'spinner.dart';
 import 'searchbar.dart';
 import 'package:flutter/material.dart';
+import 'globals.dart' as globals;
+
 
 class Home extends StatefulWidget{
   const Home({super.key});
   
+
   @override
   State<Home> createState() => HomeState();
 }
@@ -14,22 +19,22 @@ class HomeState extends State<Home>{
   
   @override
   Widget build(BuildContext context){
-    return const Column(
-      children: [
-        TopSearchBar(),
-        Expanded(
-            child: CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(child:Spinner()),
-              SliverToBoxAdapter(child:TitleHome()),
-              SliverToBoxAdapter(child:ListViewCarteleraP())
-            ]
+      return const Column(
+        children: [
+          TopSearchBar(),
+          Expanded(
+              child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(child:Spinner()),
+                SliverToBoxAdapter(child:TitleHome()),
+                ListViewCarteleraP()
+              ]
+            )
           )
-        )
-      ],
-    );
+        ],
+      );
+    }
   }
-}
 
 
 class TitleHome extends StatefulWidget{

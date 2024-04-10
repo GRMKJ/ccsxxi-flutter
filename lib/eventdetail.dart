@@ -58,8 +58,11 @@ class DatosGeneralesState extends State<DatosGenerales>{
                 children: [
                   Expanded(
                     flex: 4,
-                    child: SizedBox(
-                      child: Image.network(widget.cartelera.EVENTO.FOTO, width: 200, height: 220,),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        child: Image.network(widget.cartelera.EVENTO.FOTO, width: 150, height: 200,),
+                      ),
                     )  
                   ),
                   Expanded(
@@ -72,7 +75,6 @@ class DatosGeneralesState extends State<DatosGenerales>{
                         Text(widget.cartelera.SALA.NOMBRE, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 14)),
                         const Text('Fecha:', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14)),
                         Text(widget.cartelera.INICIO, style: const TextStyle(fontWeight: FontWeight.normal,fontSize: 14)),
-
                     ],
                                   ),
                   ),

@@ -5,6 +5,7 @@ import 'tickets.dart';
 import 'parking.dart';
 import 'myprofile.dart';
 import 'package:flutter/services.dart';
+import 'globals.dart' as globals;
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -13,11 +14,17 @@ void main() {
     systemNavigationBarColor: Color.fromARGB(255, 249, 233, 238),
     statusBarColor: Colors.transparent,
   ));
-  runApp(const MyApp());
+  if(globals.isLoggedIn!=true){
+    runApp(const MyApp());
+  }
+  else{
+    runApp(const MyApp());
+  }
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+  
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +40,7 @@ class MyApp extends StatelessWidget {
 }
 
 
+
 class BarraNavegacion extends StatefulWidget {
   const BarraNavegacion({super.key});
 
@@ -42,7 +50,7 @@ class BarraNavegacion extends StatefulWidget {
 
 class _BarraNavegacionState extends State<BarraNavegacion> {
   int currentPageIndex = 0;
-
+  
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(

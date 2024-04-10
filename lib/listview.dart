@@ -1,73 +1,73 @@
-// ignore_for_file: curly_braces_in_flow_control_structures
+// ignore_for_file: non_constant_identifier_names
+
+import 'dart:convert';
 
 import 'package:ccsxxi/eventdetail.dart';
+import 'package:ccsxxi/login.dart';
 import 'package:ccsxxi/ticketdetail.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ccsxxi/models/cartelera.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:developer';
-import 'dart:async';
+import 'globals.dart' as globals;
 
-Future<ListaCartelera> fetchAlbum() async {
-  final response = await http
-      .get(Uri.parse('https://minitechsolutions.shop/ccsxxitest/api/cartelerahome.php'));
 
-  if (response.statusCode == 200) {
-    // If the server did return a 200 OK response,
-    // then parse the JSON.
-    log(response.body);
-    return ListaCartelera.fromJson(jsonDecode(response.body) as List<dynamic>);
-  } else {
-    // If the server did not return a 200 OK response,
-    // then throw an exception.
-    throw Exception('Failed to load album');
-  }
-}
 
 class ListViewCarteleraP extends StatefulWidget{
   const ListViewCarteleraP({super.key});
-
+  
   @override
   State<ListViewCarteleraP> createState() => ListViewCarteleraPState();
 }
 
 class ListViewCarteleraPState extends State<ListViewCarteleraP>{
-  late Future<ListaCartelera> cartelera;
+  late Future<ListaCartelera> _ListaCartelera; 
 
   @override
   void initState() {
     super.initState();
-    cartelera = fetchAlbum();
+    _ListaCartelera = fetchEstudiante(); // Llamada a la función para obtener los datos al iniciar
   }
 
+  Future<ListaCartelera> fetchEstudiante() async {
+    final response = await http.get(Uri.parse('https://minitechsolutions.shop/ccsxxitest/api/cartelerahome.php')); // Reemplaza 'URL_DEL_WEBSERVICE' por la URL de tu web service
+
+    if (response.statusCode == 200) {
+      return ListaCartelera.fromJson(json.decode(response.body)); // Analiza la respuesta JSON y crea un objeto Estudiante
+    } else {
+      throw Exception('Error al cargar datos');
+    }
+  }
+  
   @override
   Widget build(BuildContext context){
-    
       return FutureBuilder<ListaCartelera>(
-      future: fetchAlbum(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Text(snapshot.hasData.toString());
-        } 
-        else if (snapshot.hasError) {
-          return Text('${snapshot.error}');
-        }
-
-    // By default, show a loading spinner.
-      return const CircularProgressIndicator();
-      },
-    );
+            future: _ListaCartelera,
+            builder:  (context, snapshot) {
+            if (snapshot.hasData) {
+              return SliverGrid( 
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: .48, ),
+                    delegate: SliverChildBuilderDelegate ( 
+                      childCount: snapshot.data!.cartelera.length,(context,index) => CarteleraPoster(cartelera: snapshot.data!.cartelera[index])),
+                    );
+            } else if (snapshot.hasError) {
+              return const SliverToBoxAdapter(child: Center(child: Text('Revisa tu Conexion')));
+            }
+            return const SliverToBoxAdapter(
+              child: Padding(
+                padding:  EdgeInsets.all(25.0),
+                child: Center(child:  CircularProgressIndicator()),
+              ),
+            ); // Muestra un indicador de carga mientras se obtienen los datos
+          },
+      );
   }
 }
-
 
 class CarteleraPoster extends StatefulWidget{
   const CarteleraPoster({super.key, required this.cartelera});
   final Cartelera cartelera;
-
-  
 
   @override
   State<CarteleraPoster> createState() => CarteleraPosterState();
@@ -158,41 +158,74 @@ class ListSettingsState extends State<ListSettings>{
   
   @override
   Widget build(BuildContext context){
-    return SliverList.list(
-      children: const <Widget>[
-        ListTile(
-          contentPadding: EdgeInsets.only(left: 25,top:10, bottom: 10,right: 25),
-          leading: CircleAvatar(child: Icon(Icons.edit)),
-          title: Text('Mis Datos',style: TextStyle(fontWeight: FontWeight.bold)),
-          subtitle: Text('Administra tu correo, contraseña, etc'),
+    if (globals.isLoggedIn!=true){
+      return SliverList.list(
+      children: <Widget>[
+        InkWell(
+          onTap: (){
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Login()));
+          },
+          child: const ListTile(
+            contentPadding: EdgeInsets.only(left: 25,top:10, bottom: 10,right: 25),
+            leading: CircleAvatar(child: Icon(Icons.login)),
+            title: Text('Iniciar Sesión',style: TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: Text('Accede para disfrutar de la App'),
+          ),
         ),
-        ListTile(
-          contentPadding: EdgeInsets.only(left: 25,top:10, bottom: 10,right: 25),
-          leading: CircleAvatar(child: Icon(Icons.credit_card)),
-          title: Text('Método de Pago', style: TextStyle(fontWeight: FontWeight.bold)),
-          subtitle: Text('Administra tus métodos de pago'),
-        ),  
-        ListTile(
-          contentPadding: EdgeInsets.only(left: 25,top:10, bottom: 10,right: 25),
-          leading: CircleAvatar(child: Icon(Icons.notifications)),
-          title: Text('Historial de Notificaciones', style: TextStyle(fontWeight: FontWeight.bold)),
-          subtitle: Text('Consulta tus notificaciones pasadas'),
+      ]
+    );
+    }
+    else {return SliverList.list(
+      children:  <Widget>[
+        const InkWell(
+          child: ListTile(
+            contentPadding: EdgeInsets.only(left: 25,top:10, bottom: 10,right: 25),
+            leading: CircleAvatar(child: Icon(Icons.edit)),
+            title: Text('Mis Datos',style: TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: Text('Administra tu correo, contraseña, etc'),
+          ),
         ),
-        ListTile(
-          contentPadding: EdgeInsets.only(left: 25,top:10, bottom: 10,right: 25),
-          leading: CircleAvatar(child: Icon(Icons.settings)),
-          title: Text('Ajustes de la Aplicación', style: TextStyle(fontWeight: FontWeight.bold)),
-          subtitle: Text('Cambia los ajustes de la aplicación'),
+        const InkWell(
+          child: ListTile(
+            contentPadding: EdgeInsets.only(left: 25,top:10, bottom: 10,right: 25),
+            leading: CircleAvatar(child: Icon(Icons.credit_card)),
+            title: Text('Método de Pago', style: TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: Text('Administra tus métodos de pago'),
+          ),
         ),  
-        ListTile(
-          contentPadding: EdgeInsets.only(left: 25,top:10, bottom: 10,right: 25),
-          leading: CircleAvatar(child: Icon(Icons.exit_to_app)),
-          title: Text('Cerrar Sesion', style: TextStyle(fontWeight: FontWeight.bold)),
-          subtitle: Text('Salir de tu usuario')
+        const InkWell(
+          child: ListTile(
+            contentPadding: EdgeInsets.only(left: 25,top:10, bottom: 10,right: 25),
+            leading: CircleAvatar(child: Icon(Icons.notifications)),
+            title: Text('Historial de Notificaciones', style: TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: Text('Consulta tus notificaciones pasadas'),
+          ),
+        ),
+        const InkWell(
+          child: ListTile(
+            contentPadding: EdgeInsets.only(left: 25,top:10, bottom: 10,right: 25),
+            leading: CircleAvatar(child: Icon(Icons.settings)),
+            title: Text('Ajustes de la Aplicación', style: TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: Text('Cambia los ajustes de la aplicación'),
+          ),
+        ),  
+        InkWell(
+          child: ListTile(
+            onTap: () {
+              globals.isLoggedIn = false;
+              globals.userRealName = " ";
+              globals.username = " ";
+              globals.mail = " ";
+            },
+            contentPadding: const EdgeInsets.only(left: 25,top:10, bottom: 10,right: 25),
+            leading: const CircleAvatar(child: Icon(Icons.exit_to_app)),
+            title: const Text('Cerrar Sesion', style: TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: const Text('Salir de tu usuario')
+          ),
         ),
       ],
     );
-  }
+  }}
 }
 
 class ListTicket extends StatefulWidget{
@@ -222,7 +255,7 @@ class ListTicketState extends State<ListTicket>{
           children: [
             Expanded(
               flex: 2,
-              child: Image.network(widget.cartelera.EVENTO.FOTO),  
+              child: Image.asset(widget.cartelera.EVENTO.FOTO),  
             ),
             Expanded(
               flex: 8,
